@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "./", "/var/www/html"
 
   # db script before the guest is destroyed
-  # vagrant plugin install vagrant-triggers
+  vagrant plugin install vagrant-triggers
   config.trigger.before :destroy do
     info "Dumping the database before destroying the VM..."
     run_remote  "bash /vagrant/wp_backup.sh"
