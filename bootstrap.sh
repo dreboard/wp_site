@@ -64,6 +64,11 @@ sudo apt-get -y install git
 # install xdebug
 #sudo apt-get install php-xdebug
 
+#wp cli
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+
 # install Composer
 curl -s https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
