@@ -15,7 +15,16 @@
 		"composer/installers": "v1.0.6",
 		"johnpbloch/wordpress": "4.6.*",
 		"wpackagist-plugin/query-monitor":"^2.13",
-		"wpackagist-plugin/debug-bar":"^0.8"
+		"wpackagist-plugin/debug-bar":"^0.8",
+        "psy/psysh" : "~0.6"
+	},
+	"scripts" : {
+		"post-install-cmd" : [
+			"[[ -f /usr/bin/wp ]] || sudo ln -s /var/www/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp",
+			"source /var/www/vendor/wp-cli/wp-cli/utils/wp-completion.bash",
+			"[[ -f ~/.bash_profile ]] || touch ~/.bash_profile",
+			"source ~/.bash_profile"
+		]
 	}
 
 }
