@@ -62,7 +62,7 @@ service apache2 restart
 sudo apt-get -y install git
 
 # install xdebug
-#sudo apt-get install php-xdebug
+sudo apt-get install php-xdebug
 
 #wp cli
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
