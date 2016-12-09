@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 # Use single quotes instead of double quotes to make it work with special-character passwords
+# variables
+DBNAME='wordpress'
 PASSWORD='1234'
 PROJECTFOLDER='./wp'
+WPUSER='root'
 
 # create project folder
 sudo mkdir "/var/www/html/${PROJECTFOLDER}"
@@ -37,6 +40,28 @@ sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $
 sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2"
 sudo apt-get -y install phpmyadmin
 
+#mysql -u root -p $PASSWORD create database wordpress
+
+
+# look to see if the database is installed yet
+RESULT=`mysqlshow --user=$WPUSER $DBNAME | grep -v Wildcard | grep -o $DBNAME`
+
+if [ "$RESULT" == $DBNAME ]
+  # if it's already installed, just indicate such
+  then
+    echo 'Database already installed.'
+
+  # if it's not installed, install it using the daptive_dma profile
+  else
+    echo "$RESULT - $DBNAME"
+    echo "Database $DBNAME not yet installed... installing using mysql"
+
+    mysql -u $WPUSER -e "CREATE DATABASE IF NOT EXISTS $DBNAME;"
+
+    # not using drush anymore for this
+    echo "Database $DBNAME should be installed, drop then run this script again to reinstall."
+fi
+
 # setup hosts file
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
@@ -58,12 +83,8 @@ sudo a2ensite wp_site.dev
 # enable mod_rewrite
 sudo a2enmod rewrite
 
-# restart apache
-service apache2 restart
-
 # install git
-sudo apt-get -y install git
-
+#sudo apt-get -y install git
 
 #wp cli
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -73,3 +94,7 @@ sudo mv wp-cli.phar /usr/local/bin/wp
 # install Composer
 curl -s https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
+
+
+# restart apache
+service apache2 restart
