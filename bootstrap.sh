@@ -26,7 +26,7 @@ sudo apt-get install -y php7.0-mysql
 # xdebug install & config
 sudo apt-get install -y php-xdebug
 cat << EOF | sudo tee -a /etc/php/7.0/cli/conf.d/xdebug.ini
-zend_extension="zend_extension="/usr/lib/php/20160303/xdebug.so"
+zend_extension="/usr/lib/php/20160303/xdebug.so"
 xdebug.remote_enable=on
 xdebug.remote_connect_back=on
 EOF
