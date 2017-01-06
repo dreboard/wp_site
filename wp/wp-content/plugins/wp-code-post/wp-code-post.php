@@ -72,3 +72,49 @@ function wpsite_register_post_type()
 }
 
 add_action('init', 'wpsite_register_post_type');
+
+/**
+ *
+ */
+function wpsite_register_taxonomy()
+{
+	$singular = 'Topic';
+	$plural = 'Topics';
+
+	$labels = array(
+		'name'                          => $plural,
+		'singular_name'                 => $singular,
+		'search_items'                  => 'Search ' .$plural,
+		'all_items'                     => 'All ' .$plural,
+		'popular_items'                 => 'Popular ' .$plural,
+		'parent_item'                   => null,
+		'parent_item_colon'             => null,
+		'edit_item'                     => 'Edit '.$singular,
+		'update_item'                   => 'Update '.$singular,
+		'add_new_item'                  => 'Add New '.$singular,
+		'new_item_name'                 => 'New '.$singular. ' Name',
+		'menu_name'                     => $plural,
+		'separate_items_with_commas'    => 'Separate '.$plural. ' with commas',
+		'add_or_remove_items'           => 'Add or remove ' .$plural,
+		'choose_from_most_used'         => 'Choose from most used ' .$plural,
+		'not_found'                     => 'No ' .$plural.' found',
+	);
+
+	$args = array(
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'genre' ),
+	);
+
+	register_taxonomy( 'topic', 'code_snip', $args );
+}
+add_action('init', 'wpsite_register_taxonomy');
+
+
+
+
+
+
