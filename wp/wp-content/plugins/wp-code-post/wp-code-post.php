@@ -60,7 +60,7 @@ function wpsite_register_post_type()
 		'has_archive'        => true,
 		'hierarchical'       => false,
 		'menu_position'      => null,
-		'supports'           => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ],
+		'supports'           => ['title', 'editor', 'author', 'custom-fields', 'thumbnail'],
 		'rewrite' => [
 			'slug' => 'code_snips',
 			'with_front' => true,

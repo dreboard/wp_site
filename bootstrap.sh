@@ -2,11 +2,11 @@
 
 # Use single quotes instead of double quotes to make it work with special-character passwords
 # variables
+$PROJECTNAME='wp_site'
 DBNAME='wordpress'
 PASSWORD='1234'
 PROJECTFOLDER='./wp'
 WPUSER='root'
-
 
 # update / upgrade
 sudo apt-get update
@@ -47,27 +47,33 @@ sudo apt-get -y install phpmyadmin
 
 # create project folder
 sudo chmod -R 755 /var/www
-sudo mkdir "/var/www/wp_site"
+sudo mkdir "/var/www/$PROJECTNAME"
 
 # setup hosts file
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
-    DocumentRoot "/var/www/wp_site/wp"
-    ServerName wp_site
-    <Directory "/var/www/wp_site/wp">
+    ServerName $PROJECTNAME.dev
+    DocumentRoot /var/www/$PROJECTNAME/wp
+    ErrorLog /var/www/$PROJECTNAME/logs/apache.error.log
+    CustomLog /var/www/$PROJECTNAME/logs/apache.access.log common
+    php_flag log_errors on
+    php_flag display_errors on
+    php_value error_reporting 2147483647
+    php_value error_log /var/www/$PROJECTNAME/logs/php.error.log
+   <Directory "/var/www/$PROJECTNAME/wp">
         AllowOverride All
         Require all granted
-    </Directory>
+   </Directory>
 </VirtualHost>
 EOF
 )
 echo "${VHOST}" > /etc/apache2/sites-available/000-default.conf
 
-sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/wp_site.conf
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$PROJECTNAME.conf
 
-echo "${VHOST}" | sudo tee /etc/apache2/sites-available/wp_site.conf
+echo "${VHOST}" | sudo tee /etc/apache2/sites-available/$PROJECTNAME.conf
 
-sudo a2ensite wp_site.conf
+sudo a2ensite $PROJECTNAME.conf
 
 # enable mod_rewrite
 sudo a2enmod rewrite
