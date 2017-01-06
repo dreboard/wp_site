@@ -1,20 +1,4 @@
 <?php
-/*
-Plugin Name: Code Snips
-Description: Display code snippets
-Version:     1.0.0
-Plugin URI:  https://github.com/dreboard
-Author:      Andre Board
-Author URI:  https://github.com/dreboard
-Text Domain: code-snips
-License:     GPL v2 or later
-
-Copyright 2016 Andre Board
-
-*/
-if(!defined('ABSPATH')){
-	exit();
-}
 
 /**
  * Create the new post type Code Snips
@@ -55,11 +39,9 @@ function wpsite_register_post_type()
 		'show_in_admin_bar'       => true,
 		'menu_position'     => 10,
 		'query_var'          => true,
-		'rewrite'            => array( 'slug' => 'book' ),
 		'capability_type'    => 'post',
 		'has_archive'        => true,
 		'hierarchical'       => false,
-		'menu_position'      => null,
 		'supports'           => ['title', 'editor', 'author', 'custom-fields', 'thumbnail'],
 		'rewrite' => [
 			'slug' => 'code_snips',
@@ -112,9 +94,5 @@ function wpsite_register_taxonomy()
 	register_taxonomy( 'topic', 'code_snip', $args );
 }
 add_action('init', 'wpsite_register_taxonomy');
-
-
-
-
 
 
