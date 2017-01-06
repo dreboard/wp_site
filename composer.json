@@ -13,7 +13,7 @@
 	},
 	"require": {
 		"composer/installers": "v1.0.6",
-		"johnpbloch/wordpress": "4.6.*",
+		"johnpbloch/wordpress": "4.7.*",
 		"wpackagist-plugin/query-monitor":"^2.13",
 		"wpackagist-plugin/debug-bar":"^0.8",
         "psy/psysh" : "~0.6"
