@@ -1,4 +1,5 @@
 # Basic Wordpress Site
+[![Build Status](https://travis-ci.org/dreboard/wp_site.svg?branch=master)](https://travis-ci.org/dreboard/wp_site)
 
 A wordpress development box to show the ability to code and run custom wordpress features.
 
