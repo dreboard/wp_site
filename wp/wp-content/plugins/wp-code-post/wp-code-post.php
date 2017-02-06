@@ -2,6 +2,7 @@
 
 /**
  * Create the new post type Code Snips
+ * @return void
  */
 function wpsite_register_post_type()
 {
@@ -56,7 +57,8 @@ function wpsite_register_post_type()
 add_action('init', 'wpsite_register_post_type');
 
 /**
- *
+ * Register new post type taxonomy
+ * @return void
  */
 function wpsite_register_taxonomy()
 {
