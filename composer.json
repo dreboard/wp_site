@@ -19,14 +19,6 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "5.5.*"
-	},
-	"scripts" : {
-		"post-install-cmd" : [
-			"[[ -f /usr/bin/wp ]] || sudo ln -s /var/www/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp",
-			"source /var/www/vendor/wp-cli/wp-cli/utils/wp-completion.bash",
-			"[[ -f ~/.bash_profile ]] || touch ~/.bash_profile",
-			"source ~/.bash_profile"
-		]
 	}
 
 }
