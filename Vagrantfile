@@ -17,13 +17,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
     sudo apt-get -y upgrade
+    sudo apt-get install -y openssl
+    sudo chmod -R 755 /vagrant
 
     echo -e "\n------------------------------------------- Installing Apache\n"
     sudo apt-get install -y apache2
     sudo a2enmod rewrite
-    sudo cp /vagrant/dev_ops/apache/api.conf /etc/apache2/sites-available/000-default.conf
-    sudo cp /vagrant/dev_ops/apache/api.conf /etc/apache2/sites-available
-    sudo a2ensite api
+    sudo cp /vagrant/dev_ops/apache/wp_site.conf /etc/apache2/sites-available/000-default.conf
+    sudo cp /vagrant/dev_ops/apache/wp_site.conf /etc/apache2/sites-available
+    sudo a2ensite wp_site
     sudo service apache2 start
 
     sudo apt-get install software-properties-common
@@ -43,12 +45,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo apt-get -y install curl git nano tofrodos
     sudo apt-get install snmp
 
-    #wp cli
-    echo -e "\n------------------------------------------- Installing Worpress CLI\n"
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    chmod +x wp-cli.phar
-    sudo mv wp-cli.phar /usr/local/bin/wp
-
     sudo apt-get -y install libapache2-mod-php7.1
     sudo apt-get -y autoremove
 
@@ -58,10 +54,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "shell", inline: <<-SHELL2
     echo -e "\n------------------------------------------- Installing Composer\n"
-    fromdos /vagrant/composer.sh
     curl -s https://getcomposer.org/installer | php
     sudo mv composer.phar /usr/local/bin/composer
     cd /vagrant && php composer.phar install
+
+    echo -e "\n------------------------------------------- Installing Worpress CLI\n"
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x wp-cli.phar
+    sudo mv wp-cli.phar /usr/local/bin/wp
+
+    echo -e "\n------------------------------------------- Activate Worpress Plugins\n"
+    cd /vagrant/wp && wp plugin activate backupwordpress --allow-root
+    cd /vagrant/wp && wp plugin activate debug-bar --allow-root
+    cd /vagrant/wp && wp plugin activate query-monitor --allow-root
+
   SHELL2
 
   config.vm.provision "bootstrap", type: "shell", path: "./dev_ops/vagrant_conf/run_always.sh", run: "always"
