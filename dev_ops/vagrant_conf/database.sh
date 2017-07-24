@@ -34,8 +34,12 @@ echo "================= Create Database and install SQL Dumps ================="
     mysql -uroot -p$PASSWORD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$PASSWORD'" > /vagrant/vm_build.log 2>&1
 
     #If database does not exist, perform dump of back up copy
-    echo "---------------- Installing dump"
-    mysql -u$DBUSER -p$PASSWORD $DBNAME < /vagrant/dev_ops/sql/wordpress.sql
+    if [ -f /vagrant/dev_ops/sql/wordpress.sql ];
+    then
+        echo "---------------- Installing dump"
+        mysql -u$DBUSER -p$PASSWORD $DBNAME < /vagrant/dev_ops/sql/wordpress.sql
+    fi
+
  fi
 
 sudo /etc/init.d/apache2 restart

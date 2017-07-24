@@ -1,6 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+#vagrant plugin install vagrant-triggers
+
+# install required plugins if necessary
+if ARGV[0] == 'up'
+    # add required plugins here
+    required_plugins = %w( vagrant-triggers )
+    missing_plugins = []
+    required_plugins.each do |plugin|
+        missing_plugins.push(plugin) unless Vagrant.has_plugin? plugin
+    end
+
+    if ! missing_plugins.empty?
+        install_these = missing_plugins.join(' ')
+        puts "Found missing plugins: #{install_these}.  Installing using sudo..."
+        exec "sudo vagrant plugin install #{install_these}; vagrant up"
+    end
+end
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -12,6 +30,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--accelerate3d", "off"]
     vb.gui = true
     vb.memory = "512"
+  end
+
+  config.trigger.before :destroy do
+    info "create database dump."
+    run_remote  "bash /vagrant/dev_ops/sql/backup.sh"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -53,10 +76,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "database", type: "shell", path: "./dev_ops/vagrant_conf/database.sh"
 
   config.vm.provision "shell", inline: <<-SHELL2
-    echo -e "\n------------------------------------------- Installing Composer\n"
+    echo -e "\n------------------------------------------- Composer install and config\n"
     curl -s https://getcomposer.org/installer | php
     sudo mv composer.phar /usr/local/bin/composer
     cd /vagrant && php composer.phar install
+    sudo cp /vagrant/dev_ops/git/post-merge.sh /vagrant/.git/hooks
 
     echo -e "\n------------------------------------------- Installing Worpress CLI\n"
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -67,6 +91,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     cd /vagrant/wp && wp plugin activate backupwordpress --allow-root
     cd /vagrant/wp && wp plugin activate debug-bar --allow-root
     cd /vagrant/wp && wp plugin activate query-monitor --allow-root
+    cd /vagrant/wp && wp plugin activate syntaxhighlighter --allow-root
 
   SHELL2
 

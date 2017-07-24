@@ -32,7 +32,7 @@ add_action('wp_dashboard_setup', 'dwwp_remove_dashboard_news');
  * Add link to google analytics on adminbar
  * @uses $wp_admin_bar
  */
-function dwwp_add_google_link()
+function wp_site_add_google_link()
 {
 	global $wp_admin_bar;
 	//echo '<pre>';
@@ -40,8 +40,9 @@ function dwwp_add_google_link()
 	$args = [
 		'id'    => 'google_analytics',
 		'title' => 'Google Analytics',
-		'href'  => 'https://analytics.google.com/'
+		'href'  => 'https://analytics.google.com/',
+		'target' => '_blank'
 		];
 	$wp_admin_bar->add_menu($args);
 }
-add_action('wp_before_admin_bar_render', 'dwwp_add_google_link');
+add_action('wp_before_admin_bar_render', 'wp_site_add_google_link');
