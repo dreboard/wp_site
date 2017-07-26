@@ -11,16 +11,45 @@ A wordpress development box to show the ability to code and run custom wordpress
 - Development server setup
 - Custom taxonomies
 
+## Automation and provisioning
 
-## PHP Modules
+We will use as much automation as possible during provisioning so that our scripts can be used. Though it's important to note that some scripts rely on others, order of execution can be important and there are many setting changes that are designed for dev environments only.  
 
-php7.1 php7.1-opcache php7.1-phpdbg php7.1-mbstring php7.1-cli php7.1-imap php7.1-ldap php7.1-pgsql php7.1-pspell php7.1-recode php7.1-snmp php7.1-tidy php7.1-dev php7.1-intl php7.1-gd php7.1-zip php7.1-xml php7.1-curl php7.1-json php7.1-mcrypt php7.1-intl php7.1-xsl
+## Requirements
 
-## Apache Vhosts Setup
+You can use this system on any computer that can run the following software, it's completely platform independent.
 
-Set up for full development error handling
+- [VirtualBox](http://www.virtualbox.org/wiki/Downloads) 
+- [Vagrant](http://www.vagrantup.com/downloads)
 
-### Setup
-- install vagrant triggers from the command line: vagrant plugin install vagrant-triggers
-- run: [vagrant up]
-- install composer dependencies [composer install]
+#### The base box was built with virtualbox 5.1.18 / vagrant 1.9.2
+
+## Components
+
+- This will run the default webserver with the default php modules we need installed.
+
+|Script               |Name|Version|Repo|Description|
+|---------------------|--------|-------|----|-----------|
+|Vagrantfile            |Linux             |16.04|Ubuntu|Xenial64
+|apache.sh            |Apache             |2.x|Ubuntu|Mounts the ./public dir to webroot, installs Apache
+|php.sh            |PHP                |7.1.x|ppa:ondrej/php|Installs PHP 7.1, restarts Apache
+|php-mcrypt.sh        |PHP Mcrypt extension|-|ppa:ondrej/php|Installs Mcrypt. Only needed for PHP 5.3.x as 5.5 has it built-in.
+|xdebug.sh 		      |Xdebug extension   |-|PECL|Install Xdebug extension for debugging purposes.
+|composer.sh          |Composer|1.4.2|getcomposer.org|Installs PHP's composer package manager
+|database.sh         |Internal|1.0.0|-|MySQL and PHPMyAdmin tasks
+
+There will be more modules to follow as we develop this shell.
+
+#### Composer
+- WP-CLI installed and plugins automatically activated
+- These hooks will install updates and run the autoloader on git pull
+- Composer dependancies will auto install from inline provision
+
+
+#### PHPStorm vagrant setup
+
+- [Configuring a remote PHP interpreter in a Vagrant environment ](https://www.jetbrains.com/help/phpstorm/configuring-remote-php-interpreters.html)
+- [Using Composer Dependency Manager](https://www.jetbrains.com/help/phpstorm/using-composer-dependency-manager.html)
+
+
+
