@@ -63,6 +63,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     echo -e "\n--- Installing Xdebug ---\n"
     sudo apt-get install -y php-xdebug
+    sudo cp /vagrant/dev_ops/apache/20-xdebug.ini /etc/php/7.1/cli/conf.d
 
     echo -e "\n------------------------------------------- Installing Extras\n"
     sudo apt-get -y install curl git nano tofrodos
