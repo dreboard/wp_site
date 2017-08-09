@@ -1,4 +1,5 @@
 RewriteEngine on
+SetEnv APPLICATION_ENV "production"
 RewriteCond %{HTTP_HOST} ^blog.dev-php.site$ [NC,OR]
 RewriteCond %{HTTP_HOST} ^www.blog.dev-php.site$
 RewriteCond %{REQUEST_URI} !wp/
