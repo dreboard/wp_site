@@ -1,24 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-#vagrant plugin install vagrant-triggers
-
-# install required plugins if necessary
-if ARGV[0] == 'up'
-    # add required plugins here
-    required_plugins = %w( vagrant-triggers )
-    missing_plugins = []
-    required_plugins.each do |plugin|
-        missing_plugins.push(plugin) unless Vagrant.has_plugin? plugin
-    end
-
-    if ! missing_plugins.empty?
-        install_these = missing_plugins.join(' ')
-        puts "Found missing plugins: #{install_these}.  Installing using sudo..."
-        exec "sudo vagrant plugin install #{install_these}; vagrant up"
-    end
-end
-
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -27,14 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8092
 
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--accelerate3d", "off"]
-    vb.gui = true
     vb.memory = "512"
-  end
-
-  config.trigger.before :destroy do
-    info "create database dump."
-    run_remote  "bash /vagrant/dev_ops/sql/backup.sh"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -49,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo cp /vagrant/dev_ops/apache/wp_site.conf /etc/apache2/sites-available/000-default.conf
     sudo cp /vagrant/dev_ops/apache/wp_site.conf /etc/apache2/sites-available
     sudo a2ensite wp_site
-    sudo service apache2 start
+    #sudo service apache2 start
 
     sudo apt-get install software-properties-common
     sudo add-apt-repository ppa:ondrej/php
